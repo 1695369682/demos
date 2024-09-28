@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.PermissionMapper">
+    <resultMap id="BaseResultMap" type="com.example.entity.Permission">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="expression" property="expression"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey">
+        delete
+        from permission
+        where id = #{id}
+    </delete>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into permission (name, expression)
+        values (#{name}, #{expression})
+    </insert>
+    <update id="updateByPrimaryKey">
+        update permission
+        set name       = #{name},
+            expression = #{expression}
+        where id = #{id}
+    </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select id, name, expression
+        from permission
+        where id = #{id}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select id, name, expression
+        from permission
+    </select>
+    <select id="selForList" resultMap="BaseResultMap">
+        select id, name, expression
+        from permission
+        <where>
+            <if test="keyword!=null and keyword !=''">
+            and (name like concat('%',#{keyword},'%') or expression like concat('%',#{keyword},'%'))
+            </if>
+        </where>
+    </select>
+    <select id="queryByRoleId" resultMap="BaseResultMap">
+        select p.id, p.name, p.expression
+        from role_permission rp
+                 join permission p
+                      on rp.permission_id = p.id
+        where rp.role_id = #{roleId}
+    </select>
+    <select id="selPermissionsByEmpId" resultType="java.lang.String">
+        SELECT expression
+        FROM permission
+        WHERE id IN
+              (SELECT permission_id
+               FROM role_permission
+               WHERE role_id in
+                     (SELECT role_id FROM employee_role WHERE employee_id = #{id}))
+    </select>
+    <select id="getCountByPermission" resultType="java.lang.Integer">
+        select count(*)
+        from permission
+        where expression = #{expression}
+    </select>
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.example.entity.Role" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="sn" property="sn" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" >
+    delete from role
+    where id = #{id}
+  </delete>
+  <delete id="delRelation">
+    delete from role_permission where role_id = #{roleId}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
+    insert into role (name, sn)
+    values (#{name}, #{sn})
+  </insert>
+  <insert id="insertRelationBatch">
+    insert into role_permission (role_id,permission_id) values
+    <foreach collection="permissionIds" item="permission" separator=",">
+      (#{role_id},#{permission})
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKey" >
+    update role
+    set name = #{name},
+      sn = #{sn}
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
+    select id, name, sn
+    from role
+    where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, name, sn
+    from role
+  </select>
+  <select id="selectForList" resultMap="BaseResultMap">
+    select id, name, sn
+    from role
+  </select>
+  <select id="selectByEmpId" resultType="com.example.entity.Role">
+    select * from role
+    where id in
+    (select role_id from employee_role where employee_id = #{emp_id})
+  </select>
+</mapper>

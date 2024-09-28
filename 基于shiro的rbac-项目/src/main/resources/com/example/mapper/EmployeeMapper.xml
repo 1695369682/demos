@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.EmployeeMapper" >
+  <resultMap id="BaseResultMap" type="com.example.entity.Employee" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="admin" property="admin" jdbcType="BIT" />
+    <result column="salt" property="salt" jdbcType="VARCHAR" />
+<!--    <result column="dept_id" property="deptId" jdbcType="BIGINT" />-->
+    <association property="dept" select="com.example.mapper.DepartmentMapper.selectByPrimaryKey"
+                 column="dept_id"/>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from employee
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteRelationById">
+    delete from employee_role where employee_id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.example.entity.Employee" useGeneratedKeys="true" keyProperty="id" >
+    insert into employee (username, name, password,
+                          email, age, admin, dept_id,salt
+    )
+    values (#{username,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+            #{email,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{admin,jdbcType=BIT}, #{dept.id,jdbcType=BIGINT},
+            #{salt}
+           )
+  </insert>
+  <insert id="insertRelationBatch">
+    insert into employee_role (employee_id,role_id) values
+    <foreach collection="empIds" item="empId" separator=",">
+      (#{role_id},#{empId})
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.entity.Employee" >
+    update employee
+    set username = #{username,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
+        email = #{email,jdbcType=VARCHAR},
+        age = #{age,jdbcType=INTEGER},
+        admin = #{admin,jdbcType=BIT},
+        dept_id = #{dept.id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, username, name, password, email, age, admin, dept_id,salt
+    from employee
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, username, name, password, email, age, admin, dept_id,salt
+    from employee
+  </select>
+  <select id="count" resultType="java.lang.Integer">
+    select count(*)
+    from employee e
+    <where>
+      <if test="keyword != null">
+        AND (e.name LIKE concat('%', #{keyword}, '%') OR e.email LIKE
+        concat('%', #{keyword}, '%'))
+      </if>
+      <if test="deptId != null">
+        AND e.dept_id = #{deptId}
+      </if>
+    </where>
+  </select>
+  <select id="selectForList" resultMap="BaseResultMap">
+    SELECT e.id,e.username,e.name, e.password, e.age, e.email, e.admin, e.dept_id,e.salt
+    FROM employee e
+    LEFT JOIN department d ON e.dept_id = d.id
+    <where>
+      <if test="keyword != null">
+        AND (e.name LIKE concat('%', #{keyword}, '%') OR e.email LIKE
+        concat('%', #{keyword}, '%'))
+      </if>
+      <if test="deptId != null">
+        AND e.dept_id = #{deptId}
+      </if>
+    </where>
+  </select>
+  <select id="checkUserName" resultType="java.lang.Integer">
+    select count(0) from employee where username=#{username}
+  </select>
+  <select id="checkUser" resultMap="BaseResultMap">
+    SELECT e.id,e.username,e.name, e.password, e.age, e.email, e.admin, e.dept_id,e.salt
+    FROM employee e
+           LEFT JOIN department d ON e.dept_id = d.id
+    where e.username=#{username} and e.password=#{password}
+  </select>
+  <select id="selUserByUsername" resultMap="BaseResultMap" >
+    SELECT e.id,e.username,e.name, e.password, e.age, e.email, e.admin, e.dept_id,e.salt
+    FROM employee e
+           LEFT JOIN department d ON e.dept_id = d.id
+    where e.username=#{username}
+  </select>
+
+
+</mapper>

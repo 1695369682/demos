@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>移动端优化示例</title>
+<!-- 引入 Swiper CSS -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #111;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        position: relative;
+    }
+
+    .swiper-container {
+        width: 90%; /* 调整宽度，以便在移动设备上显示良好 */
+        max-width: 600px; /* 设置最大宽度，避免在大屏幕设备上过度拉伸 */
+        height: 70vh; /* 调整高度，适应不同屏幕尺寸 */
+        margin: auto; /* 居中 */
+        background-color: rgba(255, 255, 255, 0.1); /* 背景颜色 */
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .swiper-slide {
+        background-size: cover;
+        background-position: center;
+        height: 100%;
+    }
+
+    #particles-js {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+
+    .swiper-pagination {
+        bottom: 10px; /* 调整分页器位置 */
+    }
+
+    .swiper-pagination-bullet {
+        width: 10px; /* 调整分页器小圆点大小 */
+        height: 10px;
+        background-color: #fff;
+        opacity: 0.5;
+        margin: 0 5px;
+    }
+
+    .swiper-pagination-bullet-active {
+        opacity: 1;
+    }
+</style>
+</head>
+<body>
+<!-- Swiper -->
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide" style="background-image:url('./img/Image1.png')"></div>
+        <div class="swiper-slide" style="background-image:url('./img/Image2.jpg')"></div>
+        <div class="swiper-slide" style="background-image:url('./img/Image3.png')"></div>
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+</div>
+
+<!-- 引入 Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<!-- 引入 particles.js 库 -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+
+<!-- 粒子特效配置 -->
+<script>
+    // 粒子特效配置
+    particlesJS("particles-js", {
+        "particles": {
+            "number": {
+                "value": 80,
+                "density": {
+                    "enable": true,
+                    "value_area": 800
+                }
+            },
+            "color": {
+                "value": "#ffffff"
+            },
+            "shape": {
+                "type": "circle",
+                "stroke": {
+                    "width": 0,
+                    "color": "#000000"
+                },
+                "polygon": {
+                    "nb_sides": 5
+                }
+            },
+            "opacity": {
+                "value": 0.5,
+                "random": true,
+                "anim": {
+                    "enable": false,
+                    "speed": 1,
+                    "opacity_min": 0.1,
+                    "sync": false
+                }
+            },
+            "size": {
+                "value": 3,
+                "random": true,
+                "anim": {
+                    "enable": false,
+                    "speed": 40,
+                    "size_min": 0.1,
+                    "sync": false
+                }
+            },
+            "line_linked": {
+                "enable": true,
+                "distance": 150,
+                "color": "#ffffff",
+                "opacity": 0.4,
+                "width": 1
+            },
+            "move": {
+                "enable": true,
+                "speed": 6,
+                "direction": "none",
+                "random": false,
+                "straight": false,
+                "out_mode": "out",
+                "bounce": false,
+                "attract": {
+                    "enable": false,
+                    "rotateX": 600,
+                    "rotateY": 1200
+                }
+            }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": {
+                    "enable": true,
+                    "mode": "grab"
+                },
+                "onclick": {
+                    "enable": true,
+                    "mode": "push"
+                },
+                "resize": true
+            },
+            "modes": {
+                "grab": {
+                    "distance": 140,
+                    "line_linked": {
+                        "opacity": 1
+                    }
+                },
+                "bubble": {
+                    "distance": 400,
+                    "size": 40,
+                    "duration": 2,
+                    "opacity": 8,
+                    "speed": 3
+                },
+                "repulse": {
+                    "distance": 200,
+                    "duration": 0.4
+                },
+                "push": {
+                    "particles_nb": 4
+                },
+                "remove": {
+                    "particles_nb": 2
+                }
+            }
+        },
+        "retina_detect": true
+    });
+</script>
+
+<!-- 初始化粒子特效 -->
+<div id="particles-js"></div>
+
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        loop: true,
+        centeredSlides: true,
+        spaceBetween: 10, /* 调整滑块间距 */
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+    });
+</script>
+
+</body>
+</html>
